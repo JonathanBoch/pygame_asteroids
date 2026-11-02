@@ -1,3 +1,6 @@
+# Logging
+game_state.jsonl
+
 # Python-generated files
 __pycache__/
 *.py[oc]
