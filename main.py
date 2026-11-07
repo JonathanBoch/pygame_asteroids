@@ -16,6 +16,11 @@ def main():
     clock = pygame.time.Clock()
     dt = 0.0
 
+    pygame.font.init()
+    score = 0
+    font = pygame.font.Font(None, 50)
+    font_coords = (50, 50)
+
     updatable = pygame.sprite.Group()
     drawable = pygame.sprite.Group()
     asteroids = pygame.sprite.Group()
@@ -53,8 +58,13 @@ def main():
                    log_event("asteroid_shot")
                    shot_loop.kill()
                    asteroid_loop.split()
+                   score += 1
+
+        font_surface = font.render(f"Score: {score}", None, "white")
+        screen.blit(font_surface, font_coords)
         
         pygame.display.flip()
+        
         dt = clock.tick(60) / 1000
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
