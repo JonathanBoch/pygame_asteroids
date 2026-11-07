@@ -50,7 +50,7 @@ def main():
         for asteroid_loop in asteroids:
             if asteroid_loop.collides_with(player):
                 log_event("player_hit")
-                print("Game over!")
+                print(f"Game over!\nScore: {score}")
                 sys.exit()
             
             for shot_loop in shots:
@@ -58,7 +58,7 @@ def main():
                    log_event("asteroid_shot")
                    shot_loop.kill()
                    asteroid_loop.split()
-                   score += 1
+                   score = int(score + asteroid_loop.score)
 
         font_surface = font.render(f"Score: {score}", None, "white")
         screen.blit(font_surface, font_coords)
