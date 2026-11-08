@@ -1,4 +1,6 @@
 import pygame
+
+from wrap import where_off_screen, adjust_pos
 from circleshape import CircleShape
 from shot import Shot
 from constants import PLAYER_RADIUS, LINE_WIDTH, \
@@ -10,6 +12,7 @@ class Player(CircleShape):
         super().__init__(x, y, PLAYER_RADIUS)
         self.rotation = 0
         self.shoot_timer = 0
+        self.which_side = where_off_screen(self)
 
     # in the Player class
     def triangle(self) -> list[pygame.Vector2]:
@@ -45,6 +48,10 @@ class Player(CircleShape):
 
         if keys[pygame.K_SPACE]:
             self.shoot()
+
+        if where_off_screen(self) != self.which_side:
+            self.which_side = where_off_screen(self)
+            adjust_pos(self, self.which_side)
 
     def move(self, dt: float) -> None:
         unit_vector = pygame.Vector2(0, 1)
