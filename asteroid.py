@@ -10,7 +10,6 @@ class Asteroid(CircleShape):
         super().__init__(x, y, radius)
         self.score = self.radius / ASTEROID_MIN_RADIUS
         self.velocity = velocity
-        self.can_wrap = False
         self.which_side = where_off_screen(self)
 
     def draw(self, screen) -> None:
