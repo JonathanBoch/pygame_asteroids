@@ -3,9 +3,7 @@ import pygame
 from wrap import where_off_screen, adjust_pos
 from circleshape import CircleShape
 from shot import Shot
-from constants import PLAYER_RADIUS, LINE_WIDTH, \
-    PLAYER_TURN_SPEED, PLAYER_SPEED, PLAYER_SHOOT_SPEED, \
-    PLAYER_SHOOT_COOLDOWN_SECONDS
+from constants import *
 
 class Player(CircleShape):
     def __init__(self, x, y):
@@ -13,6 +11,8 @@ class Player(CircleShape):
         self.rotation = 0
         self.shoot_timer = 0
         self.which_side = where_off_screen(self)
+        self.lives = PLAYER_LIVES
+        self.invincibility_timer = 0
 
     # in the Player class
     def triangle(self) -> list[pygame.Vector2]:
@@ -53,6 +53,9 @@ class Player(CircleShape):
             self.which_side = where_off_screen(self)
             adjust_pos(self, self.which_side)
 
+        if self.invincibility_timer > 0:
+            self.invincibility_timer -= dt
+
     def move(self, dt: float) -> None:
         unit_vector = pygame.Vector2(0, 1)
         rotated_vector = unit_vector.rotate(self.rotation)
@@ -69,3 +72,9 @@ class Player(CircleShape):
             shot.velocity = pygame.Vector2(0, 1)
             shot.velocity = shot.velocity.rotate(self.rotation)
             shot.velocity *= PLAYER_SHOOT_SPEED
+
+    def respawn(self) -> None:
+        self.lives -= 1
+        self.position = pygame.Vector2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+        self.rotation = 0
+        self.invincibility_timer = PLAYER_INVINCIBILITY_TIMER_SEC

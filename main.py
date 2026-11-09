@@ -1,5 +1,5 @@
 import pygame, sys
-from constants import SCREEN_HEIGHT, SCREEN_WIDTH
+from constants import *
 from logger import log_state, log_event
 from player import Player
 from asteroid import Asteroid
@@ -18,8 +18,10 @@ def main():
 
     pygame.font.init()
     score = 0
-    font = pygame.font.Font(None, 50)
-    font_coords = (50, 50)
+    font = pygame.font.Font(None, FONT_SIZE)
+    font_coord_score = (FONT_X, FONT_Y_TOP)
+    font_coord_lives = (FONT_X, FONT_Y_TOP + FONT_SPACING)
+    font_coord_invincibility = (FONT_X, FONT_Y_TOP + 2*FONT_SPACING)
 
     updatable = pygame.sprite.Group()
     drawable = pygame.sprite.Group()
@@ -47,12 +49,21 @@ def main():
         for drawable_item in drawable:
             drawable_item.draw(screen)
 
+        asteroid_loop: Asteroid
         for asteroid_loop in asteroids:
             if asteroid_loop.collides_with(player):
-                log_event("player_hit")
-                print(f"Game over!\nScore: {score}")
-                sys.exit()
-            
+
+                if player.invincibility_timer > 0:
+                    pass
+                elif (player.lives - 1 <= 0):
+                    log_event("player_died")
+                    print(f"Game over!\nScore: {score}")
+                    sys.exit()
+                else:
+                    player.respawn()
+                    log_event("player_hit_respawned")
+
+            shot_loop: Shot
             for shot_loop in shots:
                 if shot_loop.collides_with(asteroid_loop):
                    log_event("asteroid_shot")
@@ -60,9 +71,16 @@ def main():
                    asteroid_loop.split()
                    score = int(score + asteroid_loop.score)
 
-        font_surface = font.render(f"Score: {score}", None, "white")
-        screen.blit(font_surface, font_coords)
-        
+        font_surface_score = font.render(f"Score: {score}", None, FONT_COLOR)
+        font_surface_lives = font.render(f"Lives left: {player.lives}", None, FONT_COLOR)
+        screen.blits([(font_surface_score, font_coord_score), \
+                      (font_surface_lives, font_coord_lives)])
+
+        if player.invincibility_timer > 0:
+            font_surface_invincibility = \
+                font.render(f"Invincibility: {round(player.invincibility_timer, 1)}", None, FONT_COLOR)
+            screen.blit(font_surface_invincibility, font_coord_invincibility)
+
         pygame.display.flip()
         
         dt = clock.tick(60) / 1000
