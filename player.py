@@ -13,6 +13,7 @@ class Player(CircleShape):
         self.which_side = where_off_screen(self)
         self.lives = PLAYER_LIVES
         self.invincibility_timer = 0
+        self.speed = 0
 
     # in the Player class
     def triangle(self) -> list[pygame.Vector2]:
@@ -27,7 +28,7 @@ class Player(CircleShape):
         pygame.draw.polygon(screen, "white", self.triangle(), LINE_WIDTH)
 
     def rotate(self, dt: float) -> None:
-        self.rotation += PLAYER_TURN_SPEED * dt
+        self.rotation += PLAYER_TURN_SPEED_MAX * dt
 
     def update(self, dt: float) -> None:
         self.shoot_timer -= dt
@@ -56,10 +57,21 @@ class Player(CircleShape):
         if self.invincibility_timer > 0:
             self.invincibility_timer -= dt
 
+        if (not keys[pygame.K_w]) and (self.speed > 0):
+            self.move(-dt)
+        if (not keys[pygame.K_s]) and (self.speed < 0):
+            self.move(dt)
+
     def move(self, dt: float) -> None:
+        self.speed += PLAYER_ACCEL_MOVE * dt
+
         unit_vector = pygame.Vector2(0, 1)
         rotated_vector = unit_vector.rotate(self.rotation)
-        rotated_with_speed_vector = rotated_vector * PLAYER_SPEED * dt
+
+        if self.speed >= PLAYER_SPEED_MAX:
+            self.speed = PLAYER_SPEED_MAX
+
+        rotated_with_speed_vector = rotated_vector * self.speed * dt
         self.position += rotated_with_speed_vector
 
     def shoot(self) -> None:
