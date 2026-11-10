@@ -14,6 +14,7 @@ class Player(CircleShape):
         self.lives = PLAYER_LIVES
         self.invincibility_timer = 0
         self.speed = 0
+        self.prev_move_key = None
 
     # in the Player class
     def triangle(self) -> list[pygame.Vector2]:
@@ -32,7 +33,6 @@ class Player(CircleShape):
 
     def update(self, dt: float) -> None:
         self.shoot_timer -= dt
-
         keys = pygame.key.get_pressed()
 
         if keys[pygame.K_a]:
@@ -42,10 +42,16 @@ class Player(CircleShape):
             self.rotate(dt)
 
         if keys[pygame.K_w]:
-            self.move(dt)
+            if self.prev_move_key == "s":
+                self.speed = 0
+            self.prev_move_key = "w"
+            self.move(dt, True)
 
         if keys[pygame.K_s]:
-            self.move(-dt)
+            if self.prev_move_key == "w":
+                self.speed = 0
+            self.prev_move_key = "s"
+            self.move(-dt, True)
 
         if keys[pygame.K_SPACE]:
             self.shoot()
@@ -57,19 +63,25 @@ class Player(CircleShape):
         if self.invincibility_timer > 0:
             self.invincibility_timer -= dt
 
-        if (not keys[pygame.K_w]) and (self.speed > 0):
-            self.move(-dt)
-        if (not keys[pygame.K_s]) and (self.speed < 0):
-            self.move(dt)
+        if (not keys[pygame.K_w]) and (not keys[pygame.K_s]) and (self.speed > 0):
+            if self.prev_move_key == "w":
+                self.move(dt, False)
+            else:
+                self.move(-dt, False)
 
-    def move(self, dt: float) -> None:
-        self.speed += PLAYER_ACCEL_MOVE * dt
+    def move(self, dt: float, speeding_up: bool) -> None:
+        if speeding_up:
+            self.speed += PLAYER_ACCEL_MOVE * abs(dt)
+        else:
+            self.speed -= PLAYER_ACCEL_MOVE * abs(dt)
 
         unit_vector = pygame.Vector2(0, 1)
         rotated_vector = unit_vector.rotate(self.rotation)
 
         if self.speed >= PLAYER_SPEED_MAX:
             self.speed = PLAYER_SPEED_MAX
+        if self.speed < 0:
+            self.speed = 0
 
         rotated_with_speed_vector = rotated_vector * self.speed * dt
         self.position += rotated_with_speed_vector
