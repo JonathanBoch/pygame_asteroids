@@ -15,16 +15,14 @@ def main():
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
     start(screen)
+    paused = False
 
     clock = pygame.time.Clock()
     dt = 0.0
 
     pygame.font.init()
-    score = 0
     font = pygame.font.Font(None, FONT_SIZE)
-    font_coord_score = (FONT_X, FONT_Y_TOP)
-    font_coord_lives = (FONT_X, FONT_Y_TOP + FONT_SPACING)
-    font_coord_invincibility = (FONT_X, FONT_Y_TOP + 2*FONT_SPACING)
+    score = 0
 
     updatable = pygame.sprite.Group()
     drawable = pygame.sprite.Group()
@@ -48,54 +46,57 @@ def main():
                 return
 
         if pygame.key.get_pressed()[pygame.K_p]:
-            pause(screen)
+            paused = pause(screen)
+        if pygame.key.get_pressed()[pygame.K_RETURN]:
+            paused = False
+        
         if pygame.key.get_pressed()[pygame.K_ESCAPE]:
             sys.exit()
-
 
         log_state()
         for event in pygame.event.get():
             pass
-        
-        screen.fill("black")
-        
-        updatable.update(dt)
-        for drawable_item in drawable:
-            drawable_item.draw(screen)
 
-        asteroid_loop: Asteroid
-        for asteroid_loop in asteroids:
-            if asteroid_loop.collides_with(player):
+        if not paused:
+            screen.fill("black")
+            
+            updatable.update(dt)
+            for drawable_item in drawable:
+                drawable_item.draw(screen)
 
-                if player.invincibility_timer > 0:
-                    pass
-                elif (player.lives <= 1):
-                    log_event("player_died")
-                    print(f"Game over!\nScore: {score}")
-                    sys.exit()
-                else:
-                    player.respawn()
-                    log_event("player_hit_respawned")
+            asteroid_loop: Asteroid
+            for asteroid_loop in asteroids:
+                if asteroid_loop.collides_with(player):
 
-            shot_loop: Shot
-            for shot_loop in shots:
-                if shot_loop.collides_with(asteroid_loop):
-                   log_event("asteroid_shot")
-                   shot_loop.kill()
-                   asteroid_loop.split()
-                   score = int(score + asteroid_loop.score)
+                    if player.invincibility_timer > 0:
+                        pass
+                    elif (player.lives <= 1):
+                        log_event("player_died")
+                        print(f"Game over!\nScore: {score}")
+                        sys.exit()
+                    else:
+                        player.respawn()
+                        log_event("player_hit_respawned")
 
-        font_surface_score = font.render(f"Score: {score}", None, FONT_COLOR)
-        font_surface_lives = font.render(f"Lives left: {player.lives}", None, FONT_COLOR)
-        screen.blits([(font_surface_score, font_coord_score), \
-                      (font_surface_lives, font_coord_lives)])
+                shot_loop: Shot
+                for shot_loop in shots:
+                    if shot_loop.collides_with(asteroid_loop):
+                        log_event("asteroid_shot")
+                        shot_loop.kill()
+                        asteroid_loop.split()
+                        score = int(score + asteroid_loop.score)
 
-        if player.invincibility_timer > 0:
-            font_surface_invincibility = \
-                font.render(f"Invincibility: {round(player.invincibility_timer, 1)}", None, FONT_COLOR)
-            screen.blit(font_surface_invincibility, font_coord_invincibility)
+            font_surface_score = font.render(f"Score: {score}", None, FONT_COLOR)
+            font_surface_lives = font.render(f"Lives left: {player.lives}", None, FONT_COLOR)
+            screen.blits([(font_surface_score, SCORE_DISP_COORDS), \
+                        (font_surface_lives, LIVES_DISP_COORDS)])
 
-        pygame.display.flip()
+            if player.invincibility_timer > 0:
+                font_surface_invincibility = \
+                    font.render(f"Invincibility: {round(player.invincibility_timer, 1)}", None, FONT_COLOR)
+                screen.blit(font_surface_invincibility, INVINCIBILITY_DISP_COORDS)
+
+            pygame.display.flip()
 
 if __name__ == "__main__":
     main()

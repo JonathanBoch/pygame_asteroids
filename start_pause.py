@@ -13,7 +13,7 @@ def start(screen) -> None:
 
         small_font = pygame.font.Font(None, FONT_SIZE)
         font_surface_help = small_font.render("Press ""ENTER/RETURN"" to start", None, FONT_COLOR)
-        screen.blit(font_surface_help, HELP_TEXT_COORDS)
+        screen.blit(font_surface_help, START_HELP_TEXT_COORDS)
 
         pygame.draw.polygon(screen, "white", START_BOX_COORDS, LINE_WIDTH)
 
@@ -31,23 +31,24 @@ def on_static_screen(key_pressed) -> bool:
         sys.exit()
     return True
 
-def pause(screen) -> None:
-    while on_static_screen(pygame.K_RETURN):
-        screen.fill("black")
-        
-        pygame.font.init()
-        large_font = pygame.font.Font(None, 2*FONT_SIZE)
-        font_surface_start = large_font.render("PAUSED", None, FONT_COLOR)
-        screen.blit(font_surface_start, START_TEXT_COORDS)
+def pause(screen) -> bool:
+    screen.fill("black")
+    
+    pygame.font.init()
+    large_font = pygame.font.Font(None, 2*FONT_SIZE)
+    font_surface_start = large_font.render("PAUSED", None, FONT_COLOR)
+    screen.blit(font_surface_start, PAUSE_TEXT_COORDS)
 
-        small_font = pygame.font.Font(None, FONT_SIZE)
-        font_surface_help = small_font.render("Press ""ENTER/RETURN"" to unpause", None, FONT_COLOR)
-        screen.blit(font_surface_help, HELP_TEXT_COORDS)
+    small_font = pygame.font.Font(None, FONT_SIZE)
+    font_surface_help = small_font.render("Press ""ENTER/RETURN"" to unpause", None, FONT_COLOR)
+    screen.blit(font_surface_help, PAUSE_HELP_TEXT_COORDS)
 
-        pygame.draw.polygon(screen, "white", START_BOX_COORDS, LINE_WIDTH)
+    pygame.draw.polygon(screen, "white", PAUSE_BOX_COORDS, LINE_WIDTH)
 
-        pygame.display.flip()
+    pygame.display.flip()
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                return
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            return
+
+    return True
