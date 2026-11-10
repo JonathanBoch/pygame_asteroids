@@ -13,7 +13,7 @@ class Player(CircleShape):
         self.which_side = where_off_screen(self)
         self.lives = PLAYER_LIVES
         self.invincibility_timer = 0
-        self.speed = 0
+        self.move_speed = 0
         self.prev_move_key = None
 
     # in the Player class
@@ -28,8 +28,8 @@ class Player(CircleShape):
     def draw(self, screen) -> None:
         pygame.draw.polygon(screen, "white", self.triangle(), LINE_WIDTH)
 
-    def rotate(self, dt: float) -> None:
-        self.rotation += PLAYER_TURN_SPEED_MAX * dt
+    def rotate(self, dt: float,) -> None:
+        self.rotation += PLAYER_TURN_SPEED * dt
 
     def update(self, dt: float) -> None:
         self.shoot_timer -= dt
@@ -43,13 +43,13 @@ class Player(CircleShape):
 
         if keys[pygame.K_w]:
             if self.prev_move_key == "s":
-                self.speed = 0
+                self.move_speed = 0
             self.prev_move_key = "w"
             self.move(dt, True)
 
         if keys[pygame.K_s]:
             if self.prev_move_key == "w":
-                self.speed = 0
+                self.move_speed = 0
             self.prev_move_key = "s"
             self.move(-dt, True)
 
@@ -63,7 +63,7 @@ class Player(CircleShape):
         if self.invincibility_timer > 0:
             self.invincibility_timer -= dt
 
-        if (not keys[pygame.K_w]) and (not keys[pygame.K_s]) and (self.speed > 0):
+        if (not keys[pygame.K_w]) and (not keys[pygame.K_s]) and (self.move_speed > 0):
             if self.prev_move_key == "w":
                 self.move(dt, False)
             else:
@@ -71,19 +71,19 @@ class Player(CircleShape):
 
     def move(self, dt: float, speeding_up: bool) -> None:
         if speeding_up:
-            self.speed += PLAYER_ACCEL_MOVE * abs(dt)
+            self.move_speed += PLAYER_ACCEL_MOVE * abs(dt)
         else:
-            self.speed -= PLAYER_ACCEL_MOVE * abs(dt)
+            self.move_speed -= PLAYER_ACCEL_MOVE * abs(dt)
 
         unit_vector = pygame.Vector2(0, 1)
         rotated_vector = unit_vector.rotate(self.rotation)
 
-        if self.speed >= PLAYER_SPEED_MAX:
-            self.speed = PLAYER_SPEED_MAX
-        if self.speed < 0:
-            self.speed = 0
+        if self.move_speed >= PLAYER_SPEED_MAX:
+            self.move_speed = PLAYER_SPEED_MAX
+        if self.move_speed < 0:
+            self.move_speed = 0
 
-        rotated_with_speed_vector = rotated_vector * self.speed * dt
+        rotated_with_speed_vector = rotated_vector * self.move_speed * dt
         self.position += rotated_with_speed_vector
 
     def shoot(self) -> None:
@@ -102,3 +102,5 @@ class Player(CircleShape):
         self.position = pygame.Vector2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
         self.rotation = 0
         self.invincibility_timer = PLAYER_INVINCIBILITY_TIMER_SEC
+        self.move_speed = 0
+        self.rot_speed = 0
