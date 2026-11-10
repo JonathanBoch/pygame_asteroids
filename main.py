@@ -14,9 +14,7 @@ def main():
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
-    action = start(screen)
-    if action == "quit":
-        sys.exit()
+    start(screen)
 
     clock = pygame.time.Clock()
     dt = 0.0
@@ -44,6 +42,17 @@ def main():
     Shot.containers = (shots, updatable, drawable)
 
     while True: # gameloop
+        dt = clock.tick(60) / 1000
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return
+
+        if pygame.key.get_pressed()[pygame.K_p]:
+            pause(screen)
+        if pygame.key.get_pressed()[pygame.K_ESCAPE]:
+            sys.exit()
+
+
         log_state()
         for event in pygame.event.get():
             pass
@@ -60,7 +69,7 @@ def main():
 
                 if player.invincibility_timer > 0:
                     pass
-                elif (player.lives - 1 <= 0):
+                elif (player.lives <= 1):
                     log_event("player_died")
                     print(f"Game over!\nScore: {score}")
                     sys.exit()
@@ -87,11 +96,6 @@ def main():
             screen.blit(font_surface_invincibility, font_coord_invincibility)
 
         pygame.display.flip()
-        
-        dt = clock.tick(60) / 1000
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                return
 
 if __name__ == "__main__":
     main()
