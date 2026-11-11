@@ -13,6 +13,7 @@ def main():
     print(f"Screen height: {SCREEN_HEIGHT}")
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    pygame.font.init()
 
     start(screen)
     paused = False
@@ -20,7 +21,6 @@ def main():
     clock = pygame.time.Clock()
     dt = 0.0
 
-    pygame.font.init()
     font = pygame.font.Font(None, FONT_SIZE)
     score = 0
 
@@ -46,7 +46,7 @@ def main():
                 return
 
         if pygame.key.get_pressed()[pygame.K_p]:
-            paused = pause(screen)
+            paused = True
         if pygame.key.get_pressed()[pygame.K_RETURN]:
             paused = False
         
@@ -95,8 +95,12 @@ def main():
                 font_surface_invincibility = \
                     font.render(f"Invincibility: {round(player.invincibility_timer, 1)}", None, FONT_COLOR)
                 screen.blit(font_surface_invincibility, INVINCIBILITY_DISP_COORDS)
-
-            pygame.display.flip()
+        else:
+            for drawable_item in drawable:
+                drawable_item.draw(screen, "dark gray")
+            pause(screen)
+        
+        pygame.display.flip()
 
 if __name__ == "__main__":
     main()

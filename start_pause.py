@@ -3,7 +3,6 @@ import pygame, sys
 from constants import *
 
 def start(screen) -> None:
-    pygame.font.init()
     move_down_count = 0
     max_move_down = 1
     can_move_down = True
@@ -77,10 +76,7 @@ def move_arrow(coords, y_amount) -> tuple[tuple[float]]:
     new_coords = tuple(new_coords)
     return new_coords
 
-def pause(screen) -> bool:
-    screen.fill("black")
-    
-    pygame.font.init()
+def pause(screen) -> None:    
     large_font = pygame.font.Font(None, 2*FONT_SIZE)
     font_surface_start = large_font.render("PAUSED", None, FONT_COLOR)
     screen.blit(font_surface_start, PAUSE_TEXT_COORDS)
@@ -90,11 +86,7 @@ def pause(screen) -> bool:
     screen.blit(font_surface_help, PAUSE_HELP_TEXT_COORDS)
 
     pygame.draw.polygon(screen, "white", PAUSE_BOX_COORDS, LINE_WIDTH)
-
-    pygame.display.flip()
-
+    
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             return
-
-    return True
