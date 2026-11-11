@@ -33,27 +33,33 @@ FONT_Y_TOP = 30
 FONT_COLOR = "white"
 
 # Font Coordinates
-def get_box_coords(box_width, box_height) -> tuple[tuple[float]]:
-    top_left = ((SCREEN_WIDTH/ 2) - (box_width / 2), (SCREEN_HEIGHT / 2) - (box_height / 2))
-    top_right = ((SCREEN_WIDTH / 2) + (box_width / 2), (SCREEN_HEIGHT / 2) - (box_height / 2))
-    bottom_left = ((SCREEN_WIDTH / 2) - (box_width / 2), (SCREEN_HEIGHT / 2) + (box_height / 2))
-    bottom_right = ((SCREEN_WIDTH / 2) + (box_width / 2), (SCREEN_HEIGHT / 2) + (box_height / 2))
+def get_box_coords(box_width, box_height, vert_offset=0) -> tuple[tuple[float]]:
+    top_left = ((SCREEN_WIDTH/ 2) - (box_width / 2), (SCREEN_HEIGHT / 2) - (box_height / 2) - vert_offset)
+    top_right = ((SCREEN_WIDTH / 2) + (box_width / 2), (SCREEN_HEIGHT / 2) - (box_height / 2) - vert_offset)
+    bottom_left = ((SCREEN_WIDTH / 2) - (box_width / 2), (SCREEN_HEIGHT / 2) + (box_height / 2) - vert_offset)
+    bottom_right = ((SCREEN_WIDTH / 2) + (box_width / 2), (SCREEN_HEIGHT / 2) + (box_height / 2) - vert_offset)
     return (bottom_left, bottom_right, top_right, top_left)
 
 SCORE_DISP_COORDS = (FONT_X, FONT_Y_TOP)
 LIVES_DISP_COORDS = (FONT_X, FONT_Y_TOP + FONT_SPACING)
 INVINCIBILITY_DISP_COORDS = (FONT_X, FONT_Y_TOP + 2*FONT_SPACING)
 
+# Start Screen Coords
 START_BOX_WIDTH = 200
 START_BOX_HEIGHT = 80
-START_BOX_COORDS = get_box_coords(START_BOX_WIDTH, START_BOX_HEIGHT)
-START_TEXT_COORDS = ((SCREEN_WIDTH / 2) - 65, (SCREEN_HEIGHT / 2) - 25)
-START_HELP_TEXT_COORDS = (START_BOX_COORDS[0][0] - 100, START_BOX_COORDS[0][1] + 20)
+START_BOX_COORDS = get_box_coords(START_BOX_WIDTH, START_BOX_HEIGHT, 50)
+START_TEXT_COORDS = (START_BOX_COORDS[3][0] + 35, START_BOX_COORDS[3][1] + 15)
+OPTIONS_BOX_COORDS = get_box_coords(START_BOX_WIDTH, START_BOX_HEIGHT, -50)
+OPTIONS_TEXT_COORDS = (OPTIONS_BOX_COORDS[3][0] + 20, OPTIONS_BOX_COORDS[3][1] + 20)
 
+START_HELP_TEXT_COORDS = (OPTIONS_BOX_COORDS[0][0] - 100, OPTIONS_BOX_COORDS[0][1] + 20)
+START_HELP2_TEXT_COORDS = (OPTIONS_BOX_COORDS[0][0] - 30, OPTIONS_BOX_COORDS[0][1] + 2*FONT_SPACING)
+
+# Pause Screen Coords
 PAUSE_BOX_WIDTH = 300
 PAUSE_BOX_HEIGHT = 80
 PAUSE_BOX_COORDS = get_box_coords(PAUSE_BOX_WIDTH, PAUSE_BOX_HEIGHT)
-PAUSE_TEXT_COORDS = ((SCREEN_WIDTH / 2) - 110, (SCREEN_HEIGHT / 2) - 25)
-PAUSE_HELP_TEXT_COORDS = (START_BOX_COORDS[0][0] - 130, START_BOX_COORDS[0][1] + 20)
+PAUSE_TEXT_COORDS = (PAUSE_BOX_COORDS[3][0] + 40, PAUSE_BOX_COORDS[3][1] + 15)
+PAUSE_HELP_TEXT_COORDS = (PAUSE_BOX_COORDS[0][0] - 80, PAUSE_BOX_COORDS[0][1] + 20)
 
 SELECT_ARROW_X = ((SCREEN_WIDTH / 2) - (START_BOX_WIDTH / 2) - 10)
