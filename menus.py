@@ -1,8 +1,38 @@
 import pygame, sys
-
 from constants import *
 
+class Menu:
+    def __init__(self, name: str, selectable_boxes: list[str]) -> None:
+        self.name = name
+        self.selectable_boxes = selectable_boxes
+        self.num_boxes = len(selectable_boxes) + 1
+
+    def get_boxes(self, offset_list: list[int]) -> list[tuple[tuple[float]]]:
+        box_coords_list = []
+        offset_num = 0
+        for box_loop in self.selectable_boxes:
+            box_loop_width = BOX_DIMENSIONS[box_loop][0]
+            box_loop_height = BOX_DIMENSIONS[box_loop][1]
+            offset_loop = offset_list[offset_num]
+            box_coords = self.get_box_coords(box_loop_width, box_loop_height, offset_loop)
+
+            box_coords_list.append(box_coords)
+            offset_num += 1
+        return box_coords_list
+
+    def get_box_coords(box_width, box_height, vert_offset=0) -> tuple[tuple[float]]:
+        top_left = ((SCREEN_WIDTH/ 2) - (box_width / 2), (SCREEN_HEIGHT / 2) - (box_height / 2) - vert_offset)
+        top_right = ((SCREEN_WIDTH / 2) + (box_width / 2), (SCREEN_HEIGHT / 2) - (box_height / 2) - vert_offset)
+        bottom_left = ((SCREEN_WIDTH / 2) - (box_width / 2), (SCREEN_HEIGHT / 2) + (box_height / 2) - vert_offset)
+        bottom_right = ((SCREEN_WIDTH / 2) + (box_width / 2), (SCREEN_HEIGHT / 2) + (box_height / 2) - vert_offset)
+        return (bottom_left, bottom_right, top_right, top_left)
+
+    def get_text_coords(self, offset_list: list[tuple[int]]):
+
+
 def start(screen) -> None:
+    start_screen = Menu("Start", START_BOXES)
+
     move_down_count = 0
     max_move_down = 1
     can_move_down = True
@@ -59,7 +89,7 @@ def start(screen) -> None:
                 return
 
     # return currently_selected here (on this line)
-    # So it changes the behavior of "Start" or "Options" is selected
+    # So it changes the behavior if "Start" or "Options" is selected
 
 def on_static_screen(key_pressed) -> bool:
     keys = pygame.key.get_pressed()

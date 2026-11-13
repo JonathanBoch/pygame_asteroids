@@ -5,7 +5,7 @@ from player import Player
 from asteroid import Asteroid
 from asteroidfield import AsteroidField
 from shot import Shot
-from start_pause import *
+from menus import *
 
 def main():
     print(f"Starting Asteroids with pygame version: {pygame.version.ver}")
