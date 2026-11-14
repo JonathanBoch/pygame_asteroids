@@ -1,5 +1,6 @@
 import pygame, sys
 from constants import *
+from boxes import Box
 
 class Menu:
     def __init__(self, name: str) -> None:
@@ -13,63 +14,29 @@ class Menu:
                 box_names.append(box_loop)
         return box_names
 
-    def get_boxes(self) -> list[tuple[tuple[float]]]:
-        box_coords_list = []
-        text_coords_list = []
+    def init_arrow(self, box: Box) -> tuple[tuple[float]]:
+        return ((box.position_TL[0] - ARROW_OFFSET - ARROW_LENGTH, box.position_TL[1] + (box.height / 2)),\
+                (box.position_TL[0] - ARROW_OFFSET, box.position_TL[1] + (box.height / 2)),\
+                (box.position_TL[0] - ARROW_OFFSET - ARROW_POINT_LENGTH, box.position_TL[1] + ARROW_POINT_HEIGHT + (box.height / 2)),\
+                (box.position_TL[0] - ARROW_OFFSET - ARROW_POINT_LENGTH, box.position_TL[1] - ARROW_POINT_HEIGHT + (box.height / 2)),\
+                (box.position_TL[0] - ARROW_OFFSET, box.position_TL[1] + (box.height / 2)))
 
-        for box_loop in SCREEN_INFO[self.name]:
-            box_loop_width = SCREEN_INFO[self.name][box_loop][0][0]
-            box_loop_height = SCREEN_INFO[self.name][box_loop][0][1]
-            offset_loop = SCREEN_INFO[self.name][box_loop][1][1]
+    def move_arrow(self):
+        pass
 
-            box_coords_loop = self.get_box_coords(box_loop_width, box_loop_height, offset_loop)
-            box_coords_list.append(box_coords_loop)
+    def draw_boxes(self):
+        pass
 
-            text_offset_loop_x = SCREEN_INFO[self.name][box_loop][2][0]
-            text_offset_loop_y = SCREEN_INFO[self.name][box_loop][2][1]
+    def draw_text(self):
+        pass
 
-            text_pos_loop_x = box_coords_loop[3][0] + text_offset_loop_x
-            text_pos_loop_y = box_coords_loop[3][1] + text_offset_loop_y
-
-            text_pos_loop = (text_pos_loop_x, text_pos_loop_y)
-
-            text_coords_list.append(text_pos_loop)
-
-        return box_coords_list, text_coords_list
-
-    def get_box_coords(self, box_width, box_height, vert_offset=0) -> tuple[tuple[float]]:
-        top_left = ((SCREEN_WIDTH/ 2) - (box_width / 2), (SCREEN_HEIGHT / 2) - (box_height / 2) - vert_offset)
-        top_right = ((SCREEN_WIDTH / 2) + (box_width / 2), (SCREEN_HEIGHT / 2) - (box_height / 2) - vert_offset)
-        bottom_left = ((SCREEN_WIDTH / 2) - (box_width / 2), (SCREEN_HEIGHT / 2) + (box_height / 2) - vert_offset)
-        bottom_right = ((SCREEN_WIDTH / 2) + (box_width / 2), (SCREEN_HEIGHT / 2) + (box_height / 2) - vert_offset)
-        return (bottom_left, bottom_right, top_right, top_left)
-
-    def init_arrow(self, top_box_coords: tuple[float]) -> tuple[tuple[float]]:
-        box_height = top_box_coords[0][1] - top_box_coords[3][1]
-
-        box_bottom_left_x = top_box_coords[0][0]
-        box_bottom_left_y = top_box_coords[0][1]
-
-        coords = ((box_bottom_left_x - ARROW_OFFSET - ARROW_LENGTH, box_bottom_left_y - (box_height / 2)),\
-                (box_bottom_left_x - ARROW_OFFSET, box_bottom_left_y - (box_height / 2)),\
-                (box_bottom_left_x - ARROW_OFFSET - ARROW_POINT_LENGTH, box_bottom_left_y - ARROW_POINT_HEIGHT - (box_height / 2)),\
-                (box_bottom_left_x - ARROW_OFFSET - ARROW_POINT_LENGTH, box_bottom_left_y + ARROW_POINT_HEIGHT - (box_height / 2)),\
-                (box_bottom_left_x - ARROW_OFFSET, box_bottom_left_y - (box_height / 2)))
-
-        return coords
 
 def start(screen) -> str:
     start_screen = Menu("Start")
-    start_screen_box_coords, start_screen_text_coords = start_screen.get_boxes()
-
-    start_box_coords = start_screen_box_coords[0]
-    start_text_coords = start_screen_text_coords[0]
-
-    controls_box_coords = start_screen_box_coords[1]
-    controls_text_coords = start_screen_text_coords[1]
-
-    help_text_coords = start_screen_text_coords[2]
-    help2_text_coords = start_screen_text_coords[3]
+    start_box = Box(SCREEN_INFO["Start"]["Start"])
+    controls_box = Box(SCREEN_INFO["Start"]["Controls"])
+    help_text = Box(SCREEN_INFO["Start"]["Help"])
+    help2_text = Box(SCREEN_INFO["Start"]["Help2"])
 
     move_down_count = 0
     max_move_down = 1
@@ -77,7 +44,7 @@ def start(screen) -> str:
     can_move_up = False
     currently_selected = start_screen.selectable_boxes[move_down_count]
 
-    arrow_coords = start_screen.init_arrow(start_box_coords)
+    arrow_coords = start_screen.init_arrow(start_box)
 
     while on_static_screen(pygame.K_RETURN):
         screen.fill("black")
@@ -85,19 +52,19 @@ def start(screen) -> str:
         large_font = pygame.font.Font(None, 2*FONT_SIZE)
         medium_font = pygame.font.Font(None, round(1.5*FONT_SIZE))
 
-        font_surface_start = large_font.render("Start", None, FONT_COLOR)
-        screen.blit(font_surface_start, start_text_coords)
-        pygame.draw.polygon(screen, "white", start_box_coords, LINE_WIDTH)
+        font_surface_start = large_font.render(start_box.name, None, FONT_COLOR)
+        screen.blit(font_surface_start, start_box.text_pos)
+        pygame.draw.polygon(screen, FONT_COLOR, start_box.corner_coords, LINE_WIDTH)
 
-        font_surface_controls = medium_font.render("Controls", None, FONT_COLOR)
-        screen.blit(font_surface_controls, controls_text_coords)
-        pygame.draw.polygon(screen, "white", controls_box_coords, LINE_WIDTH)
+        font_surface_controls = medium_font.render(controls_box.name, None, FONT_COLOR)
+        screen.blit(font_surface_controls, controls_box.text_pos)
+        pygame.draw.polygon(screen, FONT_COLOR, controls_box.corner_coords, LINE_WIDTH)
 
         small_font = pygame.font.Font(None, FONT_SIZE)
-        font_surface_help = small_font.render("Press ""ENTER/RETURN"" to confirm", None, FONT_COLOR)
-        screen.blit(font_surface_help, help_text_coords)
-        font_surface_help2 = small_font.render("Press ""W/S"" to navigate", None, FONT_COLOR)
-        screen.blit(font_surface_help2, help2_text_coords)
+        font_surface_help = small_font.render(help_text.name, None, FONT_COLOR)
+        screen.blit(font_surface_help, help_text.text_pos)
+        font_surface_help2 = small_font.render(help2_text.name, None, FONT_COLOR)
+        screen.blit(font_surface_help2, help2_text.text_pos)
 
         if pygame.key.get_pressed()[pygame.K_s] and can_move_down:
             can_move_up = True

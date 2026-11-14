@@ -40,10 +40,10 @@ INVINCIBILITY_DISP_COORDS = (FONT_X, FONT_Y_TOP + 2*FONT_SPACING)
 # Box Information
 SCREEN_INFO = {
     "Start": {
-        "Start": [(200, 80), (0, 50), (35, 15)],
-        "Controls": [(200, 80), (0, -50), (15, 20)],
-        "Help": [(0,0), (0,0), (-220, 110)],
-        "Help2": [(0,0), (0,0), (-145, 140)]
+        "Start": ["Start", (200, 80), (0, -50), (35, -15)],
+        "Controls": ["Controls", (200, 80), (0, 50), (15, -20)],
+        "Help": ["Press ""ENTER/RETURN"" to confirm", (0,0), (0,0), (-220, -110)],
+        "Help2": ["Press ""W/S"" to navigate", (0,0), (0,0), (-145, -140)]
     },
     "Pause": (300, 80)
 }
