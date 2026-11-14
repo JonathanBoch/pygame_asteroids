@@ -40,13 +40,18 @@ INVINCIBILITY_DISP_COORDS = (FONT_X, FONT_Y_TOP + 2*FONT_SPACING)
 # Box Information
 SCREEN_INFO = {
     "Start": {
-        "Start": [(200, 80), (35, 15)],
-        "Controls": [(200, 80), (15, 20)],
-        "Help": [(0,0), (-220, 60)],
-        "Help2": [(0,0), (-145, 90)]
+        "Start": [(200, 80), (0, 50), (35, 15)],
+        "Controls": [(200, 80), (0, -50), (15, 20)],
+        "Help": [(0,0), (0,0), (-220, 110)],
+        "Help2": [(0,0), (0,0), (-145, 140)]
     },
     "Pause": (300, 80)
 }
+
+ARROW_OFFSET = 20
+ARROW_LENGTH = 100
+ARROW_POINT_LENGTH = 30
+ARROW_POINT_HEIGHT = 20
 
 #PAUSE_BOX_COORDS = get_box_coords(PAUSE_BOX_WIDTH, PAUSE_BOX_HEIGHT)
 #PAUSE_TEXT_COORDS = (PAUSE_BOX_COORDS[3][0] + 40, PAUSE_BOX_COORDS[3][1] + 15)

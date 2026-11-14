@@ -15,7 +15,7 @@ def main():
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.font.init()
 
-    start(screen)
+    chosen_screen = start(screen)
     paused = False
 
     clock = pygame.time.Clock()

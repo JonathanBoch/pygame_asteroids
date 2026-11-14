@@ -4,23 +4,29 @@ from constants import *
 class Menu:
     def __init__(self, name: str) -> None:
         self.name = name
+        self.selectable_boxes = self.get_box_names()
 
-    def get_boxes(self, offset_list: list[int]) -> list[tuple[tuple[float]]]:
+    def get_box_names(self) -> list[str]:
+        box_names = []
+        for box_loop in SCREEN_INFO[self.name]:
+            if "Help" not in box_loop:
+                box_names.append(box_loop)
+        return box_names
+
+    def get_boxes(self) -> list[tuple[tuple[float]]]:
         box_coords_list = []
         text_coords_list = []
-        offset_num = 0
 
         for box_loop in SCREEN_INFO[self.name]:
             box_loop_width = SCREEN_INFO[self.name][box_loop][0][0]
             box_loop_height = SCREEN_INFO[self.name][box_loop][0][1]
-            offset_loop = offset_list[offset_num]
+            offset_loop = SCREEN_INFO[self.name][box_loop][1][1]
+
             box_coords_loop = self.get_box_coords(box_loop_width, box_loop_height, offset_loop)
-
             box_coords_list.append(box_coords_loop)
-            offset_num += 1
 
-            text_offset_loop_x = SCREEN_INFO[self.name][box_loop][1][0]
-            text_offset_loop_y = SCREEN_INFO[self.name][box_loop][1][1]
+            text_offset_loop_x = SCREEN_INFO[self.name][box_loop][2][0]
+            text_offset_loop_y = SCREEN_INFO[self.name][box_loop][2][1]
 
             text_pos_loop_x = box_coords_loop[3][0] + text_offset_loop_x
             text_pos_loop_y = box_coords_loop[3][1] + text_offset_loop_y
@@ -38,9 +44,23 @@ class Menu:
         bottom_right = ((SCREEN_WIDTH / 2) + (box_width / 2), (SCREEN_HEIGHT / 2) + (box_height / 2) - vert_offset)
         return (bottom_left, bottom_right, top_right, top_left)
 
-def start(screen) -> None:
+    def init_arrow(self, top_box_coords: tuple[float]) -> tuple[tuple[float]]:
+        box_height = top_box_coords[0][1] - top_box_coords[3][1]
+
+        box_bottom_left_x = top_box_coords[0][0]
+        box_bottom_left_y = top_box_coords[0][1]
+
+        coords = ((box_bottom_left_x - ARROW_OFFSET - ARROW_LENGTH, box_bottom_left_y - (box_height / 2)),\
+                (box_bottom_left_x - ARROW_OFFSET, box_bottom_left_y - (box_height / 2)),\
+                (box_bottom_left_x - ARROW_OFFSET - ARROW_POINT_LENGTH, box_bottom_left_y - ARROW_POINT_HEIGHT - (box_height / 2)),\
+                (box_bottom_left_x - ARROW_OFFSET - ARROW_POINT_LENGTH, box_bottom_left_y + ARROW_POINT_HEIGHT - (box_height / 2)),\
+                (box_bottom_left_x - ARROW_OFFSET, box_bottom_left_y - (box_height / 2)))
+
+        return coords
+
+def start(screen) -> str:
     start_screen = Menu("Start")
-    start_screen_box_coords, start_screen_text_coords = start_screen.get_boxes([50, -50, -50, -50])
+    start_screen_box_coords, start_screen_text_coords = start_screen.get_boxes()
 
     start_box_coords = start_screen_box_coords[0]
     start_text_coords = start_screen_text_coords[0]
@@ -55,13 +75,9 @@ def start(screen) -> None:
     max_move_down = 1
     can_move_down = True
     can_move_up = False
-    selectable_boxes = ["Start", "Options"]
+    currently_selected = start_screen.selectable_boxes[move_down_count]
 
-    arrow_coords = (((SCREEN_WIDTH/ 2) - 200, (SCREEN_HEIGHT / 2) - 50),\
-                    ((SCREEN_WIDTH/ 2) - 130, (SCREEN_HEIGHT / 2) - 50),\
-                    ((SCREEN_WIDTH/ 2) - 150, (SCREEN_HEIGHT / 2) - 70),\
-                    ((SCREEN_WIDTH/ 2) - 150, (SCREEN_HEIGHT / 2) - 30),\
-                    ((SCREEN_WIDTH/ 2) - 130, (SCREEN_HEIGHT / 2) - 50))
+    arrow_coords = start_screen.init_arrow(start_box_coords)
 
     while on_static_screen(pygame.K_RETURN):
         screen.fill("black")
@@ -96,7 +112,7 @@ def start(screen) -> None:
                 can_move_up = False
             arrow_coords = move_arrow(arrow_coords, 100)
 
-        currently_selected = selectable_boxes[move_down_count]
+        currently_selected = start_screen.selectable_boxes[move_down_count]
 
         pygame.draw.polygon(screen, "white", arrow_coords, LINE_WIDTH)
 
@@ -106,8 +122,7 @@ def start(screen) -> None:
             if event.type == pygame.QUIT:
                 return
 
-    # return currently_selected here (on this line)
-    # So it changes the behavior if "Start" or "Options" is selected
+    return currently_selected
 
 def on_static_screen(key_pressed) -> bool:
     keys = pygame.key.get_pressed()
