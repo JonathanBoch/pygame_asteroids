@@ -49,7 +49,10 @@ SCREEN_INFO = {
         "Help": ["Press ""ENTER/RETURN"" to confirm", (0,0), (0,0), (-220, -110)],
         "Help2": ["Press ""W/S"" to navigate", (0,0), (0,0), (-145, -140)]
     },
-    "Pause": (300, 80)
+    "Pause": {
+        "Resume": ["Resume", (250, 80), (0, -50), (15, -15)],
+        "Controls": ["Controls", (200, 80), (0, 50), (15, -20)]
+    }
 }
 
 ARROW_OFFSET = 20

@@ -5,6 +5,7 @@ from player import Player
 from asteroid import Asteroid
 from asteroidfield import AsteroidField
 from shot import Shot
+from menus import Menu
 from menu_screens import *
 
 def main():
@@ -46,9 +47,8 @@ def main():
                 return
 
         if pygame.key.get_pressed()[pygame.K_p]:
+            pause_screen = Menu("Pause")
             paused = True
-        if pygame.key.get_pressed()[pygame.K_RETURN]:
-            paused = False
         
         if pygame.key.get_pressed()[pygame.K_ESCAPE]:
             sys.exit()
@@ -57,9 +57,9 @@ def main():
         for event in pygame.event.get():
             pass
 
-        if not paused:
-            screen.fill("black")
-            
+        screen.fill("black")
+
+        if not paused: # only updates if not paused, still draws (else)
             updatable.update(dt)
             for drawable_item in drawable:
                 drawable_item.draw(screen)
@@ -95,10 +95,11 @@ def main():
                 font_surface_invincibility = \
                     font.render(f"Invincibility: {round(player.invincibility_timer, 1)}", None, FONT_COLOR)
                 screen.blit(font_surface_invincibility, INVINCIBILITY_DISP_COORDS)
-        else:
+        
+        else: # if paused, draws game objects transparently
             for drawable_item in drawable:
                 drawable_item.draw(screen, "dark gray")
-            pause(screen)
+            paused = pause(pause_screen, screen)
         
         pygame.display.flip()
 
