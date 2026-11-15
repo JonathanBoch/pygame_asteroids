@@ -5,7 +5,7 @@ from player import Player
 from asteroid import Asteroid
 from asteroidfield import AsteroidField
 from shot import Shot
-from menus import *
+from menu_screens import *
 
 def main():
     print(f"Starting Asteroids with pygame version: {pygame.version.ver}")
@@ -21,7 +21,7 @@ def main():
     clock = pygame.time.Clock()
     dt = 0.0
 
-    font = pygame.font.Font(None, FONT_SIZE)
+    font = pygame.font.Font(None, REG_FONT_SIZE)
     score = 0
 
     updatable = pygame.sprite.Group()
