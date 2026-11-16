@@ -6,6 +6,7 @@ from asteroid import Asteroid
 from asteroidfield import AsteroidField
 from shot import Shot
 from menus import Menu
+from boxes import Box
 from menu_screens import *
 
 def main():
@@ -16,9 +17,21 @@ def main():
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.font.init()
 
-    chosen_screen = start(screen)
+    start_screen = Menu("Start")
+    control_screen = Menu("Controls")
+    chosen_box = start(start_screen, screen)
+
+    started = False
     paused = False
 
+    while not started:
+        if chosen_box.name == "Start":
+            started = True
+        elif chosen_box.name == "Controls":
+            chosen_box = controls(control_screen, screen)
+        elif chosen_box.name == "Back":
+            chosen_box = start(start_screen, screen)
+    
     clock = pygame.time.Clock()
     dt = 0.0
 
@@ -99,7 +112,9 @@ def main():
         else: # if paused, draws game objects transparently
             for drawable_item in drawable:
                 drawable_item.draw(screen, "dark gray")
-            paused = pause(pause_screen, screen)
+            chosen_box, paused = pause(pause_screen, screen)
+            if chosen_box.name == "Controls":
+                controls(control_screen, screen)
         
         pygame.display.flip()
 

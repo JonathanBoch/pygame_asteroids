@@ -50,8 +50,14 @@ SCREEN_INFO = {
         "Help2": ["Press ""W/S"" to navigate", (0,0), (0,0), (-145, -140)]
     },
     "Pause": {
+        "HelpNone": ["Pause", (0,0), (0,0), (0,0)],
         "Resume": ["Resume", (250, 80), (0, -50), (15, -15)],
         "Controls": ["Controls", (200, 80), (0, 50), (15, -20)]
+    },
+    "Controls": {
+        "HelpNone": ["Controls", (0,0), (0,0), (0,0)],
+        "Back": ["Back", (100, 50), (0, 25), (15, -15)],
+        "Help": ["Press ""ENTER/RETURN"" to confirm", (0,0), (0,0), (-220, -110)]
     }
 }
 
@@ -59,9 +65,3 @@ ARROW_OFFSET = 20
 ARROW_LENGTH = 100
 ARROW_POINT_LENGTH = 30
 ARROW_POINT_HEIGHT = 20
-
-#PAUSE_BOX_COORDS = get_box_coords(PAUSE_BOX_WIDTH, PAUSE_BOX_HEIGHT)
-#PAUSE_TEXT_COORDS = (PAUSE_BOX_COORDS[3][0] + 40, PAUSE_BOX_COORDS[3][1] + 15)
-#PAUSE_HELP_TEXT_COORDS = (PAUSE_BOX_COORDS[0][0] - 80, PAUSE_BOX_COORDS[0][1] + 20)
-
-#SELECT_ARROW_X = ((SCREEN_WIDTH / 2) - (START_BOX_WIDTH / 2) - 10)

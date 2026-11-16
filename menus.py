@@ -17,11 +17,13 @@ class Menu:
         return box_list
 
     def init_arrow(self, box: Box) -> tuple[tuple[float]]:
-        return ((box.position_TL[0] - ARROW_OFFSET - ARROW_LENGTH, box.position_TL[1] + (box.height / 2)),\
-                (box.position_TL[0] - ARROW_OFFSET, box.position_TL[1] + (box.height / 2)),\
-                (box.position_TL[0] - ARROW_OFFSET - ARROW_POINT_LENGTH, box.position_TL[1] + ARROW_POINT_HEIGHT + (box.height / 2)),\
-                (box.position_TL[0] - ARROW_OFFSET - ARROW_POINT_LENGTH, box.position_TL[1] - ARROW_POINT_HEIGHT + (box.height / 2)),\
-                (box.position_TL[0] - ARROW_OFFSET, box.position_TL[1] + (box.height / 2)))
+        box_pos_x = box.position_TL[0]
+        box_pos_y = box.position_TL[1]
+        return ((box_pos_x - ARROW_OFFSET - ARROW_LENGTH, box_pos_y + (box.height / 2)),\
+                (box_pos_x - ARROW_OFFSET, box_pos_y + (box.height / 2)),\
+                (box_pos_x - ARROW_OFFSET - ARROW_POINT_LENGTH, box_pos_y + ARROW_POINT_HEIGHT + (box.height / 2)),\
+                (box_pos_x - ARROW_OFFSET - ARROW_POINT_LENGTH, box_pos_y - ARROW_POINT_HEIGHT + (box.height / 2)),\
+                (box_pos_x - ARROW_OFFSET, box_pos_y + (box.height / 2)))
 
     def check_move_arrow(self, current_coords) -> tuple[tuple[float]]:
         new_coords = current_coords
@@ -73,7 +75,7 @@ class Menu:
     def on_static_screen(self, key_pressed=pygame.K_RETURN) -> bool:
         keys = pygame.key.get_pressed()
         if keys[key_pressed]:
-            return False
+            return True
         if keys[pygame.K_ESCAPE]:
             sys.exit()
-        return True
+        return False
