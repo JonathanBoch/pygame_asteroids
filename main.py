@@ -28,9 +28,11 @@ def main():
         if chosen_box.name == "Start":
             started = True
         elif chosen_box.name == "Controls":
+            screen.fill("black")
             chosen_box = controls(control_screen, screen)
         elif chosen_box.name == "Back":
             chosen_box = start(start_screen, screen)
+        pygame.display.flip()
     
     clock = pygame.time.Clock()
     dt = 0.0
@@ -53,6 +55,8 @@ def main():
 
     Shot.containers = (shots, updatable, drawable)
 
+    init_pause = True
+
     while True: # gameloop
         dt = clock.tick(60) / 1000
         for event in pygame.event.get():
@@ -62,6 +66,10 @@ def main():
         if pygame.key.get_pressed()[pygame.K_p]:
             pause_screen = Menu("Pause")
             paused = True
+            if init_pause:
+                init_pause = False
+            else:
+                init_pause = True
         
         if pygame.key.get_pressed()[pygame.K_ESCAPE]:
             sys.exit()
@@ -112,9 +120,13 @@ def main():
         else: # if paused, draws game objects transparently
             for drawable_item in drawable:
                 drawable_item.draw(screen, "dark gray")
-            chosen_box, paused = pause(pause_screen, screen)
-            if chosen_box.name == "Controls":
-                controls(control_screen, screen)
+            if (chosen_box.name == "Pause") or init_pause:
+                chosen_box = pause(pause_screen, screen)
+                init_pause = False
+            elif chosen_box.name == "Resume":
+                paused = False
+            elif chosen_box.name == "Controls":
+                chosen_box = controls(control_screen, screen, paused)
         
         pygame.display.flip()
 

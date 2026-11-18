@@ -75,7 +75,7 @@ class Menu:
     def on_static_screen(self, key_pressed=pygame.K_RETURN) -> bool:
         keys = pygame.key.get_pressed()
         if keys[key_pressed]:
-            return True
+            return False
         if keys[pygame.K_ESCAPE]:
             sys.exit()
-        return False
+        return True

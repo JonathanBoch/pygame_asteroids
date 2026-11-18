@@ -56,7 +56,7 @@ SCREEN_INFO = {
     },
     "Controls": {
         "HelpNone": ["Controls", (0,0), (0,0), (0,0)],
-        "Back": ["Back", (100, 50), (0, 25), (15, -15)],
+        "Back": ["Back", (100, 50), (0, -200), (15, -15)],
         "Help": ["Press ""ENTER/RETURN"" to confirm", (0,0), (0,0), (-220, -110)]
     }
 }
