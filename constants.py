@@ -30,6 +30,7 @@ SMALL_FONT_SIZE = 20
 REG_FONT_SIZE = 40
 MED_FONT_SIZE = 60
 LARGE_FONT_SIZE = 80
+TITLE_FONT_SIZE = 150
 
 FONT_X = 30
 FONT_SPACING = 30
@@ -44,20 +45,40 @@ INVINCIBILITY_DISP_COORDS = (FONT_X, FONT_Y_TOP + 2*FONT_SPACING)
 # Box Information
 SCREEN_INFO = {
     "Start": {
-        "Start": ["Start", (200, 80), (0, -50), (35, -15)],
-        "Controls": ["Controls", (200, 80), (0, 50), (15, -20)],
-        "Help": ["Press ""ENTER/RETURN"" to confirm", (0,0), (0,0), (-220, -110)],
-        "Help2": ["Press ""W/S"" to navigate", (0,0), (0,0), (-145, -140)]
+        "HelpTitle": ["ASTEROIDS", (0,0), (0,0), (-310, -250)],
+        "Start": ["Start", (200, 80), (0, -50), (35, 15)],
+        "Controls": ["Controls", (200, 80), (0, 50), (15, 20)],
+        "Help": ["Press ""ENTER/RETURN"" to confirm", (0,0), (0,0), (-220, 110)],
+        "Help2": ["Press ""W/S"" to navigate", (0,0), (0,0), (-145, 140)]
     },
     "Pause": {
         "HelpNone": ["Pause", (0,0), (0,0), (0,0)],
-        "Resume": ["Resume", (250, 80), (0, -50), (15, -15)],
-        "Controls": ["Controls", (200, 80), (0, 50), (15, -20)]
+        "HelpTitle": ["PAUSED", (0,0), (0,0), (-200, -250)],
+        "Resume": ["Resume", (250, 80), (0, -50), (15, 15)],
+        "Controls": ["Controls", (200, 80), (0, 50), (15, 20)]
     },
     "Controls": {
         "HelpNone": ["Controls", (0,0), (0,0), (0,0)],
-        "Back": ["Back", (100, 50), (0, -200), (15, -15)],
-        "Help": ["Press ""ENTER/RETURN"" to confirm", (0,0), (0,0), (-220, -110)]
+        "HelpTitle": ["CONTROLS", (0,0), (0,0), (-310, -350)],
+        "Back": ["Back", (150, 80), (0, 300), (10, 15)],
+
+        "DrawHelpSettingsKeybinds": ["Settings Navigation", (0,0), (0,0), (-200, -250)],
+        "DrawHelpConfirm": ["Confirm Input", (0,0), (0,0), (-325, -200)],
+        "DrawHelpConfirmKey": ["ENTER/RETURN", (0,0), (0,0), (125, -200)],
+        "DrawHelpNavigate": ["Navigate Selectable Options", (0,0), (0,0), (-325, -150)],
+        "DrawHelpNavigateKey": ["W/S", (0,0), (0,0), (125, -150)],
+        "DrawHelpPause": ["Pause Game", (0,0), (0,0), (-325, -100)],
+        "DrawHelpPauseKey": ["P", (0,0), (0,0), (125, -100)],
+
+        "DrawHelpGameplayKeybinds": ["Gameplay Keybinds", (0,0), (0,0), (-200, -50)],
+        "DrawHelpMoveForward": ["Move Forward", (0,0), (0,0), (-325, 0)],
+        "DrawHelpMoveForwardKey": ["W", (0,0), (0,0), (125, 0)],
+        "DrawHelpMoveBackward": ["Move Backward", (0,0), (0,0), (-325, 50)],
+        "DrawHelpMoveBackwardKey": ["S", (0,0), (0,0), (125, 50)],
+        "DrawHelpRotateCW": ["Rotate Clockwise", (0,0), (0,0), (-325, 100)],
+        "DrawHelpRotateCWKey": ["D", (0,0), (0,0), (125, 100)],
+        "DrawHelpRotateCCW": ["Rotate Counterclockwise", (0,0), (0,0), (-325, 150)],
+        "DrawHelpRotateCCWKey": ["A", (0,0), (0,0), (125, 150)]
     }
 }
 

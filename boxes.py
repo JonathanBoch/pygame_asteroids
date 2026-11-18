@@ -9,7 +9,7 @@ class Box:
 
         self.corner_coords = self.get_corner_coords(information[2][1])
         self.position_TL = self.corner_coords[3]
-        self.text_pos = (self.position_TL[0] + information[3][0], self.position_TL[1] - information[3][1])
+        self.text_pos = (self.position_TL[0] + information[3][0], self.position_TL[1] + information[3][1])
     
     def get_corner_coords(self, vert_offset=0) -> tuple[tuple[float]]:
         top_left = ((SCREEN_WIDTH/ 2) - (self.width / 2), (SCREEN_HEIGHT / 2) - (self.height / 2) + vert_offset)

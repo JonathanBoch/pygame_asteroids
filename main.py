@@ -23,15 +23,22 @@ def main():
 
     started = False
     paused = False
+    stop_hold_control = True
 
     while not started:
         if chosen_box.name == "Start":
             started = True
+
         elif chosen_box.name == "Controls":
             screen.fill("black")
-            chosen_box = controls(control_screen, screen)
+            chosen_box = controls(control_screen, screen, stop_hold_control)
+            if stop_hold_control and (not pygame.key.get_pressed()[pygame.K_RETURN]):
+                stop_hold_control = False
+
         elif chosen_box.name == "Back":
             chosen_box = start(start_screen, screen)
+            stop_hold_control = True
+
         pygame.display.flip()
     
     clock = pygame.time.Clock()
@@ -55,7 +62,8 @@ def main():
 
     Shot.containers = (shots, updatable, drawable)
 
-    init_pause = True
+    stop_hold_pause = True
+    stop_hold_control = True
 
     while True: # gameloop
         dt = clock.tick(60) / 1000
@@ -66,10 +74,7 @@ def main():
         if pygame.key.get_pressed()[pygame.K_p]:
             pause_screen = Menu("Pause")
             paused = True
-            if init_pause:
-                init_pause = False
-            else:
-                init_pause = True
+            init_pause = True
         
         if pygame.key.get_pressed()[pygame.K_ESCAPE]:
             sys.exit()
@@ -120,13 +125,24 @@ def main():
         else: # if paused, draws game objects transparently
             for drawable_item in drawable:
                 drawable_item.draw(screen, "dark gray")
+                
             if (chosen_box.name == "Pause") or init_pause:
-                chosen_box = pause(pause_screen, screen)
+                chosen_box = pause(pause_screen, screen, stop_hold_pause)
+                if stop_hold_pause and (not pygame.key.get_pressed()[pygame.K_RETURN]):
+                    stop_hold_pause = False
+                stop_hold_control = True
                 init_pause = False
+
             elif chosen_box.name == "Resume":
                 paused = False
+                stop_hold_pause = True
+                stop_hold_control = True
+
             elif chosen_box.name == "Controls":
-                chosen_box = controls(control_screen, screen, paused)
+                chosen_box = controls(control_screen, screen, stop_hold_control, paused)
+                if stop_hold_control and (not pygame.key.get_pressed()[pygame.K_RETURN]):
+                    stop_hold_control = False
+                stop_hold_pause = True
         
         pygame.display.flip()
 

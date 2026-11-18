@@ -8,13 +8,19 @@ class Menu:
         self.selectable_boxes = self.get_box_names()
         self.currently_selected = self.selectable_boxes[0]
 
-    def get_box_names(self) -> list[Box]:
-        box_list = []
+    def get_box_names(self, return_help_boxes=False) -> list[Box]:
+        selectable_box_list = []
+        drawable_box_list = []
         for box_loop in SCREEN_INFO[self.name]:
+            box_init_loop = Box(SCREEN_INFO[self.name][box_loop])
             if "Help" not in box_loop:
-                box_init_loop = Box(SCREEN_INFO[self.name][box_loop])
-                box_list.append(box_init_loop)
-        return box_list
+                selectable_box_list.append(box_init_loop)
+            elif "Draw" in box_loop:
+                drawable_box_list.append(box_init_loop)
+                
+        if return_help_boxes:
+            return selectable_box_list, drawable_box_list
+        return selectable_box_list
 
     def init_arrow(self, box: Box) -> tuple[tuple[float]]:
         box_pos_x = box.position_TL[0]

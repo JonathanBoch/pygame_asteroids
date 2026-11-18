@@ -4,6 +4,7 @@ from menus import Menu
 from boxes import Box
 
 def start(start_screen: Menu, screen) -> Box:
+    title_text = Box(SCREEN_INFO["Start"]["HelpTitle"])
     start_box = Box(SCREEN_INFO["Start"]["Start"])
     controls_box = Box(SCREEN_INFO["Start"]["Controls"])
     help_text = Box(SCREEN_INFO["Start"]["Help"])
@@ -21,7 +22,9 @@ def start(start_screen: Menu, screen) -> Box:
         regular_font = pygame.font.Font(None, REG_FONT_SIZE)
         medium_font = pygame.font.Font(None, MED_FONT_SIZE)
         large_font = pygame.font.Font(None, LARGE_FONT_SIZE)
+        title_font = pygame.font.Font(None, TITLE_FONT_SIZE)
 
+        start_screen.draw(title_text, title_font, screen)
         start_screen.draw(start_box, large_font, screen, LINE_WIDTH)
         start_screen.draw(controls_box, medium_font, screen, LINE_WIDTH)
         start_screen.draw(help_text, regular_font, screen)
@@ -40,15 +43,19 @@ def start(start_screen: Menu, screen) -> Box:
 
     return start_screen.currently_selected
 
-def pause(pause_screen: Menu, screen) -> bool:
+def pause(pause_screen: Menu, screen, stop_hold=False) -> bool:
     empty_box = Box(SCREEN_INFO["Pause"]["HelpNone"])
+
+    title_text = Box(SCREEN_INFO["Pause"]["HelpTitle"])
     resume_box = Box(SCREEN_INFO["Pause"]["Resume"])
     controls_box = Box(SCREEN_INFO["Pause"]["Controls"])
 
     regular_font = pygame.font.Font(None, REG_FONT_SIZE)
     medium_font = pygame.font.Font(None, MED_FONT_SIZE)
     large_font = pygame.font.Font(None, LARGE_FONT_SIZE)
+    title_font = pygame.font.Font(None, TITLE_FONT_SIZE)
 
+    pause_screen.draw(title_text, title_font, screen)
     pause_screen.draw(resume_box, large_font, screen, LINE_WIDTH)
     pause_screen.draw(controls_box, medium_font, screen, LINE_WIDTH)
 
@@ -61,24 +68,35 @@ def pause(pause_screen: Menu, screen) -> bool:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             return
-        if event.type == pygame.KEYDOWN:
-            selected_smth = not pause_screen.on_static_screen()
 
+    if not stop_hold:
+        selected_smth = not pause_screen.on_static_screen()
+    
     if selected_smth:
         return pause_screen.currently_selected
     return empty_box
 
-def controls(control_screen: Menu, screen, paused=False) -> Box:
+def controls(control_screen: Menu, screen, stop_hold=False, paused=False) -> Box:
+    selectable_box_list, drawable_box_list = control_screen.get_box_names(True)
+
     empty_box = Box(SCREEN_INFO["Controls"]["HelpNone"])
+
+    title_text = Box(SCREEN_INFO["Controls"]["HelpTitle"])
     back_box = Box(SCREEN_INFO["Controls"]["Back"])
-    help_text = Box(SCREEN_INFO["Controls"]["Help"])
 
     regular_font = pygame.font.Font(None, REG_FONT_SIZE)
     medium_font = pygame.font.Font(None, MED_FONT_SIZE)
     large_font = pygame.font.Font(None, LARGE_FONT_SIZE)
+    title_font = pygame.font.Font(None, TITLE_FONT_SIZE)
 
+    for help_box_loop in drawable_box_list:
+        if help_box_loop.name == "Settings Navigation" or help_box_loop.name == "Gameplay Keybinds":
+            control_screen.draw(help_box_loop, medium_font, screen)
+        else:
+            control_screen.draw(help_box_loop, regular_font, screen)
+
+    control_screen.draw(title_text, title_font, screen)
     control_screen.draw(back_box, large_font, screen, LINE_WIDTH)
-    control_screen.draw(help_text, medium_font, screen)
 
     arrow_coords = control_screen.init_arrow(control_screen.currently_selected)
     arrow_coords = control_screen.check_move_arrow(arrow_coords)
@@ -89,8 +107,9 @@ def controls(control_screen: Menu, screen, paused=False) -> Box:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             return
-        if event.type == pygame.KEYDOWN:
-            selected_smth = not control_screen.on_static_screen()
+
+    if not stop_hold:
+        selected_smth = not control_screen.on_static_screen()
 
     if selected_smth:
         if paused:
