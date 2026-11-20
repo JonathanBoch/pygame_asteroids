@@ -24,6 +24,9 @@ class CircleShape(pygame.sprite.Sprite):
         # must override
         pass
 
+    def get_oriented_radius(self, other) -> float:
+        return self.radius
+
     def collides_with(self, other: "CircleShape") -> bool:
         distance_between = self.position.distance_to(other.position)
-        return distance_between <= self.radius + other.radius
+        return distance_between <= self.radius + other.get_oriented_radius(other)

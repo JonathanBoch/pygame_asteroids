@@ -5,9 +5,19 @@ from circleshape import CircleShape
 from shot import Shot
 from constants import *
 
-class Player(CircleShape):
+class Player(pygame.sprite.Sprite):
+
     def __init__(self, x, y):
-        super().__init__(x, y, PLAYER_RADIUS)
+
+        if hasattr(self, "containers"):
+            super().__init__(*self.containers)
+        else:
+            super().__init__()
+
+        self.position: pygame.Vector2 = pygame.Vector2(x, y)
+        self.velocity = pygame.Vector2(0, 0)
+        self.radius = PLAYER_RADIUS
+
         self.rotation = 0
         self.shoot_timer = 0
         self.which_side = where_off_screen(self)
@@ -24,6 +34,9 @@ class Player(CircleShape):
         b = self.position - forward * self.radius - right
         c = self.position - forward * self.radius + right
         return [a, b, c]
+
+    def get_oriented_radius(self, other: CircleShape) -> float:
+        return self.radius
 
     def draw(self, screen, font_color="white") -> None:
         pygame.draw.polygon(screen, font_color, self.triangle(), LINE_WIDTH)
