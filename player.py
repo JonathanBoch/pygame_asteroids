@@ -36,7 +36,34 @@ class Player(pygame.sprite.Sprite):
         return [a, b, c]
 
     def get_oriented_radius(self, other: CircleShape) -> float:
-        return self.radius
+        line1_start_end = (self.triangle()[0], self.triangle()[1])
+        line2_start_end = (self.triangle()[1], self.triangle()[2])
+        line3_start_end = (self.triangle()[2], self.triangle()[0])
+
+        dist_to_line1 = self.get_closest_dist(other.position, line1_start_end)
+        dist_to_line2 = self.get_closest_dist(other.position, line2_start_end)
+        dist_to_line3 = self.get_closest_dist(other.position, line3_start_end)
+
+        shortest_dist = min(dist_to_line1, dist_to_line2, dist_to_line3)
+        
+        return abs(other.position.distance_to(self.position)) - shortest_dist
+
+    def get_closest_dist(self, ref_point: pygame.Vector2, start_end: tuple[tuple[int]]) -> float:
+        line_start = pygame.Vector2(start_end[0])
+        line_end = pygame.Vector2(start_end[1])
+
+        line_segment = line_end - line_start
+        point_to_line = ref_point - line_start
+
+        projection_length_ratio = point_to_line.dot(line_segment) / line_segment.length_squared()
+        projection_length_ratio = max(0.0, min(1.0, projection_length_ratio))
+        closest_point = line_start + line_segment * projection_length_ratio
+
+        closest_dist = ref_point.distance_to(closest_point)
+        if closest_dist <= 0:
+            return 0
+        return closest_dist
+
 
     def draw(self, screen, font_color="white") -> None:
         pygame.draw.polygon(screen, font_color, self.triangle(), LINE_WIDTH)
